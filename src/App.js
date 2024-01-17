@@ -1,11 +1,13 @@
 import { useState } from 'react';
+import TodoList from './components/TodoList';
+import InputField from './components/InputField';
 import styles from './App.module.scss';
 
 function App() {
   const [todos, setTodos] = useState([]);
   const [text, setText] = useState('')
 
-  const addTodo = () => {
+  const addToDo = () => {
     if (text) {
       setTodos([
         ...todos,
@@ -26,7 +28,7 @@ function App() {
           if (todo.id === id) {
             return {
               ...todo,
-              completed: !todo.copmpleted
+              completed: !todo.completed
             }
           }
           return todo
@@ -41,22 +43,16 @@ function App() {
 
   return (
     <div className={styles.app}>
-      <label>
-        <input value={text} onChange={(e) => setText(e.target.value)}></input>
-        <button className={styles.button} onClick={addTodo}>Add</button>
-      </label>
+      <InputField
+        text={text}
+        setText={setText}
+        addToDo={addToDo}
+      />
 
-      <ul className={`${styles.list} list`}>
-        {todos.map(todo =>
-          <li key={todo.id}>
-            <input
-              type='checkbox'
-              checked={todo.copmpleted}
-              onClick={() => toggleTodoComplete(todo.id)} />
-            <span className={styles.text}>{todo.text}</span>
-            <span className={styles.delete} onClick={() => deleteToDo(todo.id)}>&times;</span>
-          </li>)}
-      </ul>
+      <TodoList
+        todos={todos}
+        toggleTodoComplete={toggleTodoComplete}
+        deleteToDo={deleteToDo} />
 
     </div>
   );
