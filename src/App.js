@@ -1,44 +1,17 @@
 import { useState } from 'react';
 import TodoList from './components/TodoList';
 import InputField from './components/InputField';
+import { useDispatch } from 'react-redux';
+import { addToDo } from './store/todoSlice'
 import styles from './App.module.scss';
 
 function App() {
-  const [todos, setTodos] = useState([]);
   const [text, setText] = useState('')
 
-  const addToDo = () => {
-    if (text) {
-      setTodos([
-        ...todos,
-        {
-          id: new Date().toISOString(),
-          text,
-          completed: false,
-        }
-      ])
-      setText('')
-    }
-  }
-
-  const toggleTodoComplete = (id) => {
-    setTodos(
-      todos.map(
-        todo => {
-          if (todo.id === id) {
-            return {
-              ...todo,
-              completed: !todo.completed
-            }
-          }
-          return todo
-        }
-      )
-    )
-  }
-
-  const deleteToDo = (id) => {
-    setTodos(todos.filter(todo => todo.id !== id))
+  const dispatch = useDispatch()
+  const addTask = () => {
+    dispatch(addToDo({ text }))
+    setText('')
   }
 
   return (
@@ -46,13 +19,10 @@ function App() {
       <InputField
         text={text}
         setText={setText}
-        addToDo={addToDo}
+        handleSubmit={addTask}
       />
 
-      <TodoList
-        todos={todos}
-        toggleTodoComplete={toggleTodoComplete}
-        deleteToDo={deleteToDo} />
+      <TodoList />
 
     </div>
   );
